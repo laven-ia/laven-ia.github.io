@@ -1,0 +1,16 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# 렌더링 확인용 임시 파일
+.shot.png
+.full.png
+.crop.png
+.dark*.png
+.dark-test.html
