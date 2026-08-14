@@ -115,7 +115,7 @@ button:focus-visible {
   height: var(--topbar-h);
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
 }
 
 .topbar__brand {
@@ -130,6 +130,7 @@ button:focus-visible {
   align-items: center;
   gap: 4px;
   margin-left: auto;
+  min-width: 0; /* 좁은 화면에서 우측 버튼이 밀려나지 않도록 축소 허용 */
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -149,6 +150,36 @@ button:focus-visible {
 .topbar__nav a.is-active {
   color: var(--accent);
   background: var(--accent-soft);
+}
+
+.btn-pdf {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.12);
+  transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+}
+.btn-pdf:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 6px 16px -8px var(--accent);
+}
+.btn-pdf:active { transform: translateY(0); }
+
+.btn-pdf__icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
 }
 
 .theme-toggle {
@@ -717,8 +748,10 @@ html[data-theme='dark'] .footer__sign-img {
   transform: none;
 }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 760px) {
+/* ---------- Responsive ----------
+   screen 한정: 인쇄 시 페이지 폭(약 700px)이 이 브레이크포인트보다 좁아
+   모바일 레이아웃이 PDF에 적용되는 것을 막는다. */
+@media screen and (max-width: 760px) {
   .hero__top {
     grid-template-columns: 1fr;
     justify-items: start;
@@ -732,10 +765,46 @@ html[data-theme='dark'] .footer__sign-img {
   .timeline__item { grid-template-columns: 1fr; gap: 6px; }
   .project__meta > div { grid-template-columns: 1fr; gap: 2px; }
   .topbar__brand { display: none; }
-  .topbar__nav { margin-left: 0; }
+  .topbar__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 36px 34px;
+    gap: 8px;
+    width: 100%;
+    overflow: hidden;
+  }
+  .topbar__nav {
+    margin-left: 0;
+    width: 100%;
+    padding-right: 84px;
+  }
+  .btn-pdf {
+    position: fixed;
+    top: 13px;
+    right: 60px;
+    z-index: 60;
+    width: 36px;
+    justify-content: center;
+    padding: 0;
+    gap: 0;
+  }
+  .theme-toggle {
+    position: fixed;
+    top: 13px;
+    right: 18px;
+    z-index: 60;
+  }
+  .btn-pdf__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .btn-pdf__icon { width: 16px; height: 16px; }
 }
 
-@media (max-width: 420px) {
+@media screen and (max-width: 420px) {
   .wrap, .topbar__inner { padding: 0 18px; }
 }
 
@@ -748,15 +817,205 @@ html[data-theme='dark'] .footer__sign-img {
   .reveal { opacity: 1; transform: none; }
 }
 
-/* ---------- Print ---------- */
+/* ---------- Print / PDF ---------- */
+@page {
+  size: A4;
+  margin: 11mm 12mm;
+}
+
 @media print {
-  :root { --bg: #fff; --bg-alt: #fff; --surface: #fff; }
-  .topbar, .hero__glow, .footer__links, .skip-link { display: none !important; }
-  body { font-size: 11pt; line-height: 1.6; }
-  .section { padding: 18pt 0; break-inside: avoid; }
-  .project { break-inside: avoid; border-color: #ccc; box-shadow: none; }
-  .reveal { opacity: 1 !important; transform: none !important; }
-  a { color: #000; }
-  .hero__photo { box-shadow: none; border-color: #ccc; }
-  .footer__sign-img { filter: none !important; mix-blend-mode: multiply !important; }
+  /* 다크 테마 상태로 인쇄해도 항상 라이트 팔레트로 고정 */
+  :root,
+  html[data-theme='dark'] {
+    --bg: #fff;
+    --bg-alt: #fff;
+    --surface: #fff;
+    --text: #16181d;
+    --text-soft: #33383f;
+    --text-mute: #6a707a;
+    --border: #d8dce1;
+    --border-strong: #b9bfc7;
+    --accent: #1d4ed8;
+    --accent-soft: #eef2fe;
+    --accent-line: #b9c9f5;
+  }
+
+  html { font-size: 15px; }
+  body {
+    font-size: 10.2pt;
+    line-height: 1.62;
+    background: #fff;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* 화면 전용 요소 제거 */
+  .topbar,
+  .hero__glow,
+  .skip-link,
+  .btn-pdf { display: none !important; }
+
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .wrap { max-width: none; padding: 0; }
+
+  /* --- Hero --- */
+  .hero {
+    padding: 0 0 9pt;
+    border-bottom: 1.2pt solid var(--text);
+    break-inside: avoid;
+  }
+  .hero__top { gap: 15pt; grid-template-columns: minmax(0, 1fr) 26mm; }
+  .hero__name { font-size: 25pt; }
+  .hero__role { font-size: 11pt; margin-top: 2pt; }
+  .hero__eyebrow { font-size: 7.8pt; margin-bottom: 6pt; }
+  .hero__contact { margin-top: 11pt; gap: 4pt 20pt; }
+  .hero__contact li { font-size: 9.4pt; }
+  .hero__photo {
+    box-shadow: none;
+    border: 0.6pt solid var(--border);
+    border-radius: 3pt;
+  }
+  .hero__photo::after { display: none; }
+  .hero__metrics {
+    margin-top: 8pt;
+    gap: 5pt;
+    break-inside: avoid;
+  }
+  .metric {
+    padding: 7pt 10pt;
+    box-shadow: none;
+    border-radius: 4pt;
+    border-color: var(--border);
+  }
+  .metric__value { font-size: 15pt; }
+  .metric__label { margin-top: 4pt; font-size: 7.8pt; line-height: 1.45; }
+  .metric__sub { font-size: 7.4pt; }
+
+  /* --- Section --- */
+  .section {
+    padding: 12pt 0 2pt;
+    border: 0;
+    background: #fff;
+  }
+  .section__title {
+    font-size: 13pt;
+    margin-bottom: 8pt;
+    break-after: avoid;
+  }
+  .section__num { font-size: 8pt; }
+
+  .about { max-width: none; font-size: 10pt; line-height: 1.62; gap: 7pt; }
+  .about strong { background: none; text-decoration: underline; text-underline-offset: 2.5pt; }
+
+  /* --- Skills --- */
+  .skills { gap: 5pt; grid-template-columns: repeat(3, 1fr); }
+  .skill-card {
+    padding: 7pt 10pt 8pt;
+    box-shadow: none;
+    border-radius: 4pt;
+    break-inside: avoid;
+  }
+  .skill-card__title { font-size: 7.6pt; margin-bottom: 5pt; }
+  .chips { gap: 3pt; }
+  .chips li {
+    font-size: 8pt;
+    padding: 1pt 6pt;
+    border-radius: 6pt;
+  }
+
+  /* --- Project --- */
+  .project {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    break-inside: auto;
+  }
+  .project + .project {
+    margin-top: 13pt;
+    padding-top: 11pt;
+    border-top: 0.6pt solid var(--border);
+  }
+  .project__head {
+    padding-bottom: 7pt;
+    border-bottom: 0.6pt solid var(--border);
+    break-after: avoid;
+  }
+  .project__name { font-size: 12.5pt; }
+  .project__role { font-size: 9pt; margin-top: 2pt; }
+  .project__period { font-size: 8.6pt; }
+  .project__meta { margin-top: 8pt; gap: 3pt; break-inside: avoid; }
+  .project__meta dd { font-size: 9.2pt; }
+  .project__block { margin-top: 9pt; }
+  .project__block-title { font-size: 9.4pt; margin-bottom: 4pt; break-after: avoid; }
+  .bullets { gap: 3.4pt; }
+  .bullets li {
+    font-size: 9.4pt;
+    line-height: 1.55;
+    padding-left: 12pt;
+    break-inside: avoid;
+  }
+  .bullets li::before { left: 1.5pt; width: 3pt; height: 3pt; }
+  .project__stack {
+    margin-top: 9pt;
+    padding-top: 7pt;
+    gap: 4pt;
+    break-inside: avoid;
+  }
+  .project__stack-label { font-size: 7.4pt; }
+
+  /* --- Timeline --- */
+  .timeline-group { break-inside: avoid; }
+  .timeline-group + .timeline-group { margin-top: 10pt; }
+  .timeline-group__title { font-size: 9pt; padding-bottom: 4pt; }
+  .timeline__item {
+    padding: 5pt 0;
+    gap: 12pt;
+    grid-template-columns: 185px 1fr;
+    break-inside: avoid;
+  }
+  .timeline__period { font-size: 9pt; }
+  .timeline__org { font-size: 10pt; }
+  .timeline__desc { font-size: 9.2pt; }
+
+  /* --- Etc --- */
+  .etc-grid { gap: 5pt; grid-template-columns: repeat(3, 1fr); }
+  .etc-card {
+    padding: 8pt 10pt;
+    box-shadow: none;
+    border-radius: 4pt;
+    break-inside: avoid;
+  }
+  .etc-card__title { font-size: 8pt; padding-bottom: 5pt; margin-bottom: 6pt; }
+  .etc-list { gap: 6pt; }
+  .etc-list__date { font-size: 7.8pt; }
+  .etc-list__name { font-size: 9.2pt; }
+  .etc-list__desc { font-size: 8.4pt; }
+
+  /* --- Footer --- */
+  .footer {
+    padding: 13pt 0 0;
+    background: #fff;
+    border-top: 0.6pt solid var(--border);
+    break-inside: avoid;
+  }
+  .footer__links { display: none !important; }
+  .footer__statement { font-size: 9.6pt; }
+  .footer__date { font-size: 9.2pt; }
+  .footer__sign { font-size: 10.5pt; }
+  .footer__sign-img {
+    height: 34pt;
+    margin-left: 8pt;
+    margin-top: -8pt;
+    filter: none !important;
+    mix-blend-mode: multiply !important;
+  }
+
+  a { color: inherit; text-decoration: none; }
 }

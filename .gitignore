@@ -14,3 +14,14 @@ desktop.ini
 .crop.png
 .dark*.png
 .dark-test.html
+
+# PDF 렌더링 확인용 임시 파일
+.b*.png
+.bar.png
+.barm.png
+.page*.png
+.pdfinspect.py
+.pp*.png
+.print-preview.css
+.print-test.html
+.top.png
