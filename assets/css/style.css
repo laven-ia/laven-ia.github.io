@@ -493,6 +493,9 @@ html[data-theme='dark'] .theme-toggle__icon {
   gap: 7px;
 }
 .chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 4px 11px;
   font-size: 0.83rem;
   font-weight: 600;
@@ -502,11 +505,90 @@ html[data-theme='dark'] .theme-toggle__icon {
   border-radius: 999px;
   line-height: 1.6;
 }
+.chips li[data-stack]::before {
+  content: '';
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  background: center / contain no-repeat var(--stack-icon);
+}
+.chips li[data-stack][data-stack='pyqt']::before,
+.chips li[data-stack][data-stack='nicegui']::before,
+.chips li[data-stack][data-stack='tanstack']::before,
+.chips li[data-stack][data-stack='context']::before,
+.chips li[data-stack][data-stack='rest']::before,
+.chips li[data-stack][data-stack='websocket']::before,
+.chips li[data-stack][data-stack='canvas']::before,
+.chips li[data-stack][data-stack='echarts']::before,
+.chips li[data-stack][data-stack='rtsp']::before,
+.chips li[data-stack][data-stack='hls']::before,
+.chips li[data-stack][data-stack='mediamtx']::before,
+.chips li[data-stack][data-stack='ffmpeg']::before,
+.chips li[data-stack][data-stack='pyinstaller']::before,
+.chips li[data-stack][data-stack='gltf']::before,
+.chips li[data-stack][data-stack='recharts']::before,
+.chips li[data-stack][data-stack='ndjson']::before {
+  content: var(--stack-label);
+  width: auto;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 5px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.58rem;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0;
+}
 .chips--ghost li {
   background: transparent;
   border-color: var(--border);
   color: var(--text-soft);
   font-weight: 500;
+}
+.chips--ghost li[data-stack]::before {
+  background-color: var(--bg-alt);
+}
+.chips li[data-stack='react'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg'); }
+.chips li[data-stack='typescript'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg'); }
+.chips li[data-stack='javascript'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg'); }
+.chips li[data-stack='vite'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg'); }
+.chips li[data-stack='nextjs'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg'); }
+.chips li[data-stack='svelte'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/svelte/svelte-original.svg'); }
+.chips li[data-stack='redux'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg'); }
+.chips li[data-stack='threejs'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/threejs/threejs-original.svg'); }
+.chips li[data-stack='unity'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unity/unity-original.svg'); }
+.chips li[data-stack='electron'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/electron/electron-original.svg'); }
+.chips li[data-stack='fastapi'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg'); }
+.chips li[data-stack='python'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg'); }
+.chips li[data-stack='qgis'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/qgis/qgis-original.svg'); }
+.chips li[data-stack='git'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg'); }
+.chips li[data-stack='jira'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jira/jira-original.svg'); }
+.chips li[data-stack='figma'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg'); }
+.chips li[data-stack='csharp'] { --stack-icon: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg'); }
+.chips li[data-stack='pyqt'] { --stack-label: 'Qt'; }
+.chips li[data-stack='nicegui'] { --stack-label: 'NG'; }
+.chips li[data-stack='tanstack'] { --stack-label: 'TQ'; }
+.chips li[data-stack='context'] { --stack-label: 'Ctx'; }
+.chips li[data-stack='rest'] { --stack-label: 'API'; }
+.chips li[data-stack='websocket'] { --stack-label: 'WS'; }
+.chips li[data-stack='canvas'] { --stack-label: 'Cv'; }
+.chips li[data-stack='echarts'] { --stack-label: 'EC'; }
+.chips li[data-stack='rtsp'] { --stack-label: 'RT'; }
+.chips li[data-stack='hls'] { --stack-label: 'HL'; }
+.chips li[data-stack='mediamtx'] { --stack-label: 'MTX'; }
+.chips li[data-stack='ffmpeg'] { --stack-label: 'FF'; }
+.chips li[data-stack='pyinstaller'] { --stack-label: 'PI'; }
+.chips li[data-stack='gltf'] { --stack-label: '3D'; }
+.chips li[data-stack='recharts'] { --stack-label: 'RC'; }
+.chips li[data-stack='ndjson'] { --stack-label: 'ND'; }
+html[data-theme='dark'] .chips li[data-stack='nextjs']::before,
+html[data-theme='dark'] .chips li[data-stack='threejs']::before,
+html[data-theme='dark'] .chips li[data-stack='unity']::before {
+  filter: invert(1);
 }
 
 /* ---------- Project ---------- */
