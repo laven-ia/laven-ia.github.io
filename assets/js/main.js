@@ -93,10 +93,7 @@
 
   /* ---------- Nav scroll-spy ---------- */
   var links = Array.prototype.slice
-    .call(document.querySelectorAll('.topbar__nav a'))
-    .filter(function (link) {
-      return link.getAttribute('href').charAt(0) === '#';
-    });
+    .call(document.querySelectorAll('.topbar__nav a[href^="#"], .page-remote a[href^="#"]'));
   var sections = links
     .map(function (link) {
       return document.querySelector(link.getAttribute('href'));
