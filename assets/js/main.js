@@ -65,7 +65,7 @@
 
   /* ---------- Reveal on scroll ---------- */
   var targets = document.querySelectorAll(
-    '.section__title, .about p, .skill-card, .project, .timeline-group, .etc-card, .metric'
+    '.section__title, .about p, .skill-card, .project, .timeline-group, .etc-card, .metric, .summary-card, .detail-card, .process-card'
   );
 
   if (!('IntersectionObserver' in window)) {
@@ -92,7 +92,11 @@
   }
 
   /* ---------- Nav scroll-spy ---------- */
-  var links = Array.prototype.slice.call(document.querySelectorAll('.topbar__nav a'));
+  var links = Array.prototype.slice
+    .call(document.querySelectorAll('.topbar__nav a'))
+    .filter(function (link) {
+      return link.getAttribute('href').charAt(0) === '#';
+    });
   var sections = links
     .map(function (link) {
       return document.querySelector(link.getAttribute('href'));
