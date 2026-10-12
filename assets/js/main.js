@@ -38,6 +38,69 @@
     if (!hasChoice) root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
   });
 
+  /* ---------- Stack logos ---------- */
+  var DEVICON = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/';
+  var SIMPLE = 'https://cdn.simpleicons.org/';
+  var stackIcons = {
+    react: { src: DEVICON + 'react/react-original.svg', alt: 'React' },
+    typescript: { src: DEVICON + 'typescript/typescript-original.svg', alt: 'TypeScript' },
+    javascript: { src: DEVICON + 'javascript/javascript-original.svg', alt: 'JavaScript' },
+    vite: { src: DEVICON + 'vitejs/vitejs-original.svg', alt: 'Vite' },
+    nextjs: { src: DEVICON + 'nextjs/nextjs-original.svg', alt: 'Next.js', invert: true },
+    svelte: { src: DEVICON + 'svelte/svelte-original.svg', alt: 'Svelte' },
+    pyqt: { src: DEVICON + 'qt/qt-original.svg', alt: 'Qt' },
+    nicegui: { src: DEVICON + 'python/python-original.svg', alt: 'NiceGUI' },
+    tanstack: { src: SIMPLE + 'reactquery/FF4154', alt: 'TanStack Query' },
+    redux: { src: DEVICON + 'redux/redux-original.svg', alt: 'Redux' },
+    context: { src: DEVICON + 'react/react-original.svg', alt: 'React Context API' },
+    rest: { src: SIMPLE + 'openapiinitiative/6BA539', alt: 'REST API' },
+    websocket: { mark: 'WS' },
+    canvas: { src: DEVICON + 'html5/html5-original.svg', alt: 'Canvas API' },
+    echarts: { src: SIMPLE + 'apacheecharts/AA344D', alt: 'Apache ECharts' },
+    threejs: { src: DEVICON + 'threejs/threejs-original.svg', alt: 'Three.js', invert: true },
+    unity: { src: DEVICON + 'unity/unity-original.svg', alt: 'Unity', invert: true },
+    rtsp: { mark: 'RT' },
+    hls: { mark: 'HL' },
+    mediamtx: { mark: 'MTX' },
+    ffmpeg: { src: SIMPLE + 'ffmpeg/007808', alt: 'FFmpeg' },
+    electron: { src: DEVICON + 'electron/electron-original.svg', alt: 'Electron' },
+    pyinstaller: { src: DEVICON + 'python/python-original.svg', alt: 'PyInstaller' },
+    fastapi: { src: DEVICON + 'fastapi/fastapi-original.svg', alt: 'FastAPI' },
+    python: { src: DEVICON + 'python/python-original.svg', alt: 'Python' },
+    qgis: { src: DEVICON + 'qgis/qgis-original.svg', alt: 'QGIS' },
+    gltf: { src: SIMPLE + 'khronosgroup/CC3333', alt: 'glTF' },
+    git: { src: DEVICON + 'git/git-original.svg', alt: 'Git' },
+    jira: { src: DEVICON + 'jira/jira-original.svg', alt: 'Jira' },
+    figma: { src: DEVICON + 'figma/figma-original.svg', alt: 'Figma' },
+    recharts: { mark: 'RC' },
+    csharp: { src: DEVICON + 'csharp/csharp-original.svg', alt: 'C#' },
+    ndjson: { src: DEVICON + 'json/json-original.svg', alt: 'NDJSON' }
+  };
+
+  Array.prototype.forEach.call(document.querySelectorAll('.chips li[data-stack]'), function (chip) {
+    if (chip.querySelector('.stack-logo, .stack-mark')) return;
+
+    var icon = stackIcons[chip.getAttribute('data-stack')];
+    if (!icon) return;
+
+    if (icon.src) {
+      var img = document.createElement('img');
+      img.className = 'stack-logo' + (icon.invert ? ' stack-logo--invert' : '');
+      img.src = icon.src;
+      img.alt = icon.alt || '';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      chip.insertBefore(img, chip.firstChild);
+      return;
+    }
+
+    var mark = document.createElement('span');
+    mark.className = 'stack-mark';
+    mark.setAttribute('aria-hidden', 'true');
+    mark.textContent = icon.mark;
+    chip.insertBefore(mark, chip.firstChild);
+  });
+
   /* ---------- Scroll progress + stuck topbar ---------- */
   var topbar = document.getElementById('topbar');
   var progress = document.getElementById('progress');
